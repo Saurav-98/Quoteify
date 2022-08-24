@@ -3,10 +3,22 @@ const quoteText = document.getElementById('quote');
 const authorText = document.getElementById('author');
 const twitterBtn = document.getElementById('twitter');
 const newQuoteBtn = document.getElementById('new-quote');
+const loaderEl = document.getElementById('loader');
 
 let quoteList = [];
 
+const loading = () => {
+  loaderEl.hidden = false;
+  quoteContainer.hidden = true;
+};
+
+const complete = () => {
+  quoteContainer.hidden = false;
+  loaderEl.hidden = true;
+};
+
 const randomQuote = () => {
+  loading();
   const singleQuote = quoteList[Math.floor(Math.random() * quoteList.length)];
 
   //   Check if Author Field is blank and fill it with Unknown
@@ -21,10 +33,13 @@ const randomQuote = () => {
     ? quoteText.classList.add('long-quote')
     : quoteText.classList.remove('long-quote');
 
+  // set Quote Hide Loader
+  complete();
   quoteText.textContent = singleQuote.text;
 };
 
 async function getQuotes() {
+  loading();
   const apiUrl = 'https://type.fit/api/quotes';
 
   try {
@@ -45,4 +60,7 @@ const tweetQuote = () => {
 // Adding Event Listeners
 newQuoteBtn.addEventListener('click', randomQuote);
 twitterBtn.addEventListener('click', tweetQuote);
+
+// On Load
+
 getQuotes();
